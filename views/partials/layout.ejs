@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+    }
+
+    .navbar {
+      background: #111;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .nav-links a {
+      color: white;
+      margin-left: 15px;
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      color: #00bcd4;
+    }
+
+    .container {
+      padding: 20px;
+    }
+  </style>
+
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <a class="logo" href="/">TPNOVA HUB</a>
+
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/services">Services</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </div>
+
+  <!-- PAGE CONTENT -->
+  <div class="container">
+    <%- body %>
+  </div>
+
+</body>
+</html>
