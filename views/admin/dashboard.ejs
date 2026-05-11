@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard | TPNOVA HUB</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:#f4f7fb;
+}
+
+/* SIDEBAR */
+.sidebar{
+    position:fixed;
+    width:250px;
+    height:100vh;
+    background:#0f172a;
+    color:white;
+    padding:20px;
+}
+
+.sidebar a{
+    display:block;
+    color:white;
+    text-decoration:none;
+    padding:12px;
+    margin-bottom:10px;
+    background:#1e293b;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.sidebar a:hover{
+    background:#2563eb;
+}
+
+/* MAIN */
+.main{
+    margin-left:270px;
+    padding:20px;
+}
+
+/* DASH CARDS */
+.card-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+/* SECTIONS */
+.section{
+    display:none;
+}
+
+.active{
+    display:block;
+}
+
+/* TABLE */
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+    background:white;
+}
+
+th, td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+/* FORM */
+input, textarea, select{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    border:1px solid #ccc;
+    border-radius:8px;
+}
+
+button{
+    padding:10px 15px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#2563eb;
+    color:white;
+}
+
+/* ACTION BUTTONS */
+.action-btn{
+    padding:6px 10px;
+    border-radius:6px;
+    text-decoration:none;
+    color:white;
+    font-size:13px;
+}
+
+.view-btn{
+    background:#16a34a;
+}
+
+.delete-btn{
+    background:#dc2626;
+}
+
+/* IMAGE NOTE */
+.note{
+    font-size:12px;
+    color:gray;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+    <h2>TPNOVA ADMIN</h2>
+
+    <a onclick="showSection('dashboard')">Dashboard</a>
+    <a onclick="showSection('upload')">Portfolio Upload</a>
+    <a onclick="showSection('bookings')">View Bookings</a>
+    <a href="/">Exit Site</a>
+
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="section active">
+
+        <h1>Welcome Admin</h1>
+
+        <div class="card-container">
+
+            <div class="card" onclick="showSection('upload')">
+                <h3>Portfolio Works</h3>
+                <p>Upload new projects (multi-image support)</p>
+            </div>
+
+            <div class="card" onclick="showSection('bookings')">
+                <h3>Bookings</h3>
+                <p>View all client bookings</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- UPLOAD -->
+    <div id="upload" class="section">
+
+        <h2>Upload Portfolio Work</h2>
+
+        <form action="/admin/upload" method="POST" enctype="multipart/form-data">
+
+            <input type="text" name="title" placeholder="Project Title" required>
+
+            <textarea name="description" placeholder="Project Description"></textarea>
+
+            <select name="category">
+                <option>Web Development</option>
+                <option>Graphic Design</option>
+                <option>Branding</option>
+                <option>UI/UX</option>
+            </select>
+
+            <!-- MULTIPLE IMAGE UPLOAD -->
+            <input type="file" name="image" multiple required>
+
+            <p class="note">
+                You can select multiple images for the same project.
+            </p>
+
+            <button type="submit">Upload</button>
+
+        </form>
+
+    </div>
+
+    <!-- BOOKINGS -->
+    <div id="bookings" class="section">
+
+        <h2>Client Bookings</h2>
+
+        <table>
+
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Service</th>
+                <th>Message</th>
+                <th>Booked At</th>
+                <th>Action</th>
+            </tr>
+
+            <% bookings.forEach(b => { %>
+                <tr>
+                    <td><%= b.id %></td>
+                    <td><%= b.full_name %></td>
+                    <td><%= b.email %></td>
+                    <td><%= b.phone %></td>
+                    <td><%= b.service %></td>
+                    <td><%= b.message %></td>
+
+                    <td>
+                        <%= new Date(b.created_at).toLocaleString() %>
+                    </td>
+
+                    <td>
+
+                        <a href="/admin/bookings/<%= b.id %>" class="action-btn view-btn">
+                            View
+                        </a>
+
+                        <form action="/admin/bookings/delete/<%= b.id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="action-btn delete-btn" onclick="return confirm('Delete this booking?')">
+                                Delete
+                            </button>
+                        </form>
+
+                    </td>
+
+                </tr>
+            <% }) %>
+
+        </table>
+
+    </div>
+
+</div>
+
+<!-- SCRIPT -->
+<script>
+
+function showSection(id){
+
+    let sections = document.querySelectorAll(".section");
+
+    sections.forEach(sec => {
+        sec.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+}
+
+</script>
+
+</body>
+</html>
